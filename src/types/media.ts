@@ -1,16 +1,25 @@
-export type MediaType = "movie" | "tv";
+export type MediaType = 'movie' | 'tv';
 
-export type MediaCardItem = {
-    id: string;
-    title: string;
-    year: number;
-    rating: number;
-    type: MediaType;
-    posterUrl: string;
-}
+export type MediaGenre = {
+  id: number;
+  name: string;
+};
 
-export type FeaturedItem = {
-    id: string;
-    title: string;
-    imageUrl: string;
-}
+export type MediaListItem = {
+  id: string;
+  title: string;
+  year: number;
+  rating: number;
+  type: MediaType;
+  posterUrl: string;
+};
+
+export type MediaSummary = {
+  id: string;
+  title: string;
+  year: number;
+  rating: number;
+  type: MediaType;
+  imageUrl: string;
+  genres: string[];
+};

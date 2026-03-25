@@ -1,23 +1,25 @@
-import { FeaturedItem, MediaCardItem } from '@/types/media';
+import { MediaListItem } from '@/types/media';
 
 export const categories = ['All', 'Adventure', 'Comedy', 'Fantasy', 'Drama'];
 
-export const featuredItems: FeaturedItem[] = [
+export const featuredItems = [
   {
     id: '1',
     title: 'The Beekeeper',
-    imageUrl: 'https://placehold.co/1200x600/1c252d/f9f8ff?text=Featured+Banner',
+    imageUrl:
+      'https://placehold.co/1200x600/1c252d/f9f8ff?text=Featured+Banner',
   },
 ];
 
-export const newItems: MediaCardItem[] = [
+export const newItems: MediaListItem[] = [
   {
     id: '1',
     title: 'Lilo & Stitch',
     year: 2025,
     rating: 7.2,
     type: 'movie',
-    posterUrl: 'https://placehold.co/300x450/222c35/f9f8ff?text=Lilo+%26+Stitch',
+    posterUrl:
+      'https://placehold.co/300x450/222c35/f9f8ff?text=Lilo+%26+Stitch',
   },
   {
     id: '2',
@@ -37,7 +39,7 @@ export const newItems: MediaCardItem[] = [
   },
 ];
 
-export const movieItems: MediaCardItem[] = [
+export const movieItems: MediaListItem[] = [
   {
     id: '4',
     title: 'Spider-Man',

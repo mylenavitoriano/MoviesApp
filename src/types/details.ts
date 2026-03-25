@@ -1,3 +1,5 @@
+import { MediaType } from './media';
+
 export type CastMember = {
   id: string;
   name: string;
@@ -15,7 +17,7 @@ export type MediaDetails = {
   title: string;
   year: number;
   rating: number;
-  type: 'movie' | 'tv';
+  type: MediaType;
   imageUrl: string;
   genres: string[];
   overview: string;
