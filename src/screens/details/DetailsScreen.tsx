@@ -2,18 +2,33 @@ import { Screen } from '../../components/common/Screen';
 import { ScrollView, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { DetailHero } from '../../components/details/DetailHero';
-import { detailsMock } from '../../mocks/details';
 import { GenrePills } from '../../components/details/GenrePills';
 import { Text } from 'react-native-paper';
 import { spacing } from '../../theme/spacing';
 import { KeyInfoList } from '../../components/details/KeyInfoList';
 import { CastList } from '../../components/details/CastList';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useEffect, useState } from 'react';
+import { MediaDetails } from '../../types/details';
+import { getMediaDetails } from '../../services/details/detailsService';
 
 export function DetailsScreen() {
-  const item = detailsMock;
+  const [item, setItem] = useState<MediaDetails | null>(null);
 
   const tabBarHeight = useBottomTabBarHeight();
+
+  useEffect(() => {
+    async function loadDetails() {
+      const data = await getMediaDetails();
+      setItem(data);
+    }
+
+    loadDetails();
+  }, []);
+
+  if (!item) {
+    return <Screen style={styles.screen} />;
+  }
 
   return (
     <Screen style={styles.screen}>

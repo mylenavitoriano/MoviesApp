@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { Screen } from '../../components/common/Screen';
@@ -13,15 +13,31 @@ import {
 import { FeaturedBanner } from './components/FeaturedBanner';
 import { MediaSection } from './components/MediaSection';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { getHomeScreenData } from '../../services/home/homeService';
+import { HomeScreenData } from '../../types/media';
 
 export function HomeScreen() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [homeData, setHomeData] = useState<HomeScreenData | null>(null);
 
   const filteredNewItems = useMemo(() => newItems, []);
   const filteredMovieItems = useMemo(() => movieItems, []);
 
   const tabBarHeight = useBottomTabBarHeight();
+
+  useEffect(() => {
+    async function loadHomeData() {
+      const data = await getHomeScreenData();
+      setHomeData(data);
+    }
+
+    loadHomeData();
+  }, []);
+
+  if (!homeData) {
+    return <Screen style={styles.screen} />;
+  }
 
   return (
     <Screen style={styles.screen}>
