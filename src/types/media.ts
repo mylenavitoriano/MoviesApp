@@ -41,6 +41,6 @@ export type HomeSection = {
 /** Representa tudo o que a home precisa receber */
 export type HomeScreenData = {
   categories: string[];
-  featuredItem: FeaturedMediaItem;
+  featuredItem: FeaturedMediaItem | null;
   sections: HomeSection[];
 };

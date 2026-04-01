@@ -8,26 +8,59 @@ import { spacing } from '../../theme/spacing';
 import { KeyInfoList } from '../../components/details/KeyInfoList';
 import { CastList } from '../../components/details/CastList';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MediaDetails } from '../../types/details';
 import { getMediaDetails } from '../../services/details/detailsService';
+import { ScreenLoader } from '../../components/common/ScreenLoader';
+import { StateFeedback } from '../../components/common/StateFeedback';
+import { CloudOff } from 'lucide-react-native';
+
+type DetailsScreenStatus = 'loading' | 'success' | 'error';
 
 export function DetailsScreen() {
   const [item, setItem] = useState<MediaDetails | null>(null);
+  const [status, setStatus] = useState<DetailsScreenStatus>('loading');
 
   const tabBarHeight = useBottomTabBarHeight();
 
-  useEffect(() => {
-    async function loadDetails() {
-      const data = await getMediaDetails();
-      setItem(data);
-    }
+  const loadDetails = useCallback(async () => {
+    try {
+      setStatus('loading');
 
-    loadDetails();
+      const data = await getMediaDetails();
+
+      setItem(data);
+      setStatus('success');
+    } catch (error) {
+      setStatus('error');
+      console.log(error);
+    }
   }, []);
 
-  if (!item) {
-    return <Screen style={styles.screen} />;
+  useEffect(() => {
+    loadDetails();
+  }, [loadDetails]);
+
+  if (status === 'loading') {
+    return (
+      <Screen style={styles.screen}>
+        <ScreenLoader label="Loading details..." />
+      </Screen>
+    );
+  }
+
+  if (status === 'error' || !item) {
+    return (
+      <Screen style={styles.screen}>
+        <StateFeedback
+          icon={CloudOff}
+          title={'Could not load the home'}
+          description="The selected media could not be loaded right now. Please try again."
+          actionLabel="Try again"
+          onAction={loadDetails}
+        />
+      </Screen>
+    );
   }
 
   return (
