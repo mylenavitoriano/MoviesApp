@@ -15,5 +15,5 @@ export type SearchResultItem = {
 export type SearchFilters = {
   type: SearchMediaType;
   genres: string[];
-  minimunRating: number;
+  minimumRating: number;
 };
