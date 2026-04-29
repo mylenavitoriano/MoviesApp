@@ -9,20 +9,15 @@ import { SearchScreen } from '../screens/search/SearchScreen';
 import { DetailsScreen } from '@/screens/details/DetailsScreen';
 import { colors } from '../theme/colors';
 import { CustomTabBar } from './CustomTabBar';
-
-type RootTabParamList = {
-  Home: undefined;
-  Search: undefined;
-  Favorites: undefined;
-  Profile: undefined;
-};
+import { RootStackParamList, RootTabParamList } from './types';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export function AppNavigator() {
+function TabNavigator() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
+    <Tab.Navigator
         tabBar={props => <CustomTabBar {...props} />}
         screenOptions={{
           headerShown: false,
@@ -36,6 +31,16 @@ export function AppNavigator() {
         <Tab.Screen name="Favorites" component={FavoritesScreen} />
         <Tab.Screen name="Profile" component={DetailsScreen} />
       </Tab.Navigator>
+  )
+}
+
+export function AppNavigator() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Tabs" component={TabNavigator} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

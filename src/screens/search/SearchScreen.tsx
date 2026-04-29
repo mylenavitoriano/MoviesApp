@@ -18,8 +18,12 @@ import { useSearchResults } from '../../hooks/useSearchResults';
 import { ScreenLoader } from '../../components/common/ScreenLoader';
 import { StateFeedback } from '../../components/common/StateFeedback';
 import { CloudOff } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigationProp } from '../../routes/types';
 
 export function SearchScreen() {
+  const navigation = useNavigation<RootStackNavigationProp>();
+
   const [query, setQuery] = useState('');
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>(searchInitialFilters);
@@ -60,7 +64,7 @@ export function SearchScreen() {
   }  
 
   function handlePressResult(item: SearchResultItem) {
-    console.log('Navigate to details:', item.id);
+    navigation.navigate('Details', { id: item.id });
   }
 
   const filtersSummary = [

@@ -7,27 +7,29 @@ import { Text } from 'react-native-paper';
 import { spacing } from '../../theme/spacing';
 import { KeyInfoList } from '../../components/details/KeyInfoList';
 import { CastList } from '../../components/details/CastList';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useCallback, useEffect, useState } from 'react';
 import { MediaDetails } from '../../types/details';
 import { getMediaDetails } from '../../services/details/detailsService';
 import { ScreenLoader } from '../../components/common/ScreenLoader';
 import { StateFeedback } from '../../components/common/StateFeedback';
 import { CloudOff } from 'lucide-react-native';
+import { useRoute } from '@react-navigation/native';
+import { DetailsRoutProp } from '../../routes/types';
 
 type DetailsScreenStatus = 'loading' | 'success' | 'error';
 
 export function DetailsScreen() {
+  const route = useRoute<DetailsRoutProp>();
+  const { id } = route.params;
+
   const [item, setItem] = useState<MediaDetails | null>(null);
   const [status, setStatus] = useState<DetailsScreenStatus>('loading');
-
-  const tabBarHeight = useBottomTabBarHeight();
 
   const loadDetails = useCallback(async () => {
     try {
       setStatus('loading');
 
-      const data = await getMediaDetails();
+      const data = await getMediaDetails(id);
 
       setItem(data);
       setStatus('success');
@@ -35,7 +37,7 @@ export function DetailsScreen() {
       setStatus('error');
       console.log(error);
     }
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     loadDetails();
@@ -68,7 +70,7 @@ export function DetailsScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: tabBarHeight + 24,
+          paddingBottom: 48,
         }}
       >
         <DetailHero item={item} />

@@ -9,12 +9,14 @@ function wait(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function getMediaDetails(): Promise<MediaDetails> {
+export async function getMediaDetails(id: string): Promise<MediaDetails> {
   await wait(700);
 
   if (DETAILS_SERVICE_MODE === 'error') {
     throw new Error('Could not load media details.');
   }
+
+  console.log(id)
 
   return detailsMock;
 }
