@@ -1,27 +1,20 @@
-import { Text, TextInput } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { Screen } from '../../components/common/Screen';
-import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import { SearchFilters, SearchMediaType } from '../../types/search';
+import { SearchFilters, SearchMediaType, SearchResultItem } from '../../types/search';
 import { useState } from 'react';
 import {
-  searchGenresMock,
   searchInitialFilters,
-  searchRatingOptions,
   searchResultsMock,
 } from '../../mocks/search';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { Search, SearchX, SlidersHorizontal } from 'lucide-react-native';
-import { AppIconButton } from '../../components/common/AppIconButton';
-import { RatingRow } from '../../components/common/RatingRow';
 import { spacing } from '../../theme/spacing';
 import { radius } from '../../theme/radius';
-
-const typeOptions: { label: string; value: SearchMediaType }[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Movies', value: 'movie' },
-  { label: 'TV Shows', value: 'tv' },
-];
+import { SearchResultCard } from '../../components/search/SearchResultCard';
+import { SearchEmptyState } from '../../components/search/SearchEmptyState';
+import { SearchFiltersPanel } from '../../components/search/SearchFiltersPanel';
+import { SearchInput } from '../../components/search/SearchInput';
 
 export function SearchScreen() {
   const [query, setQuery] = useState('');
@@ -93,6 +86,10 @@ export function SearchScreen() {
       : `${filters.minimumRating}+ rating`,
   ].join(' • ');
 
+  function handlePressResult(item: SearchResultItem) {
+    console.log('Navigate to details:', item.id);
+  }
+
   return (
     <Screen style={styles.screen}>
       <ScrollView
@@ -108,24 +105,11 @@ export function SearchScreen() {
           Find movies and series with local mock filters.
         </Text>
 
-        <View style={styles.searchRow}>
-          <View style={styles.inputWrapper}>
-            <Search size={20} color={colors.textSecondary} strokeWidth={2} />
-
-            <TextInput
-              value={query}
-              onChangeText={setQuery}
-              placeholder="Search movies or series"
-              placeholderTextColor={colors.placeholder}
-              style={styles.input}
-            />
-          </View>
-
-          <AppIconButton
-            icon={SlidersHorizontal}
-            onPress={() => setFiltersVisible(current => !current)}
-          />
-        </View>
+        <SearchInput 
+          value={query} 
+          onChangeText={setQuery}
+          onToggleFilters={() => setFiltersVisible(current => !current)}
+        />
 
         <View style={styles.summaryCard}>
           <Text variant="titleMedium" style={styles.summaryTitle}>
@@ -137,88 +121,13 @@ export function SearchScreen() {
         </View>
 
         {filtersVisible ? (
-          <View style={styles.filtersCard}>
-            <Text variant="titleMedium" style={styles.sectionTitle}>
-              Type
-            </Text>
-
-            <View style={styles.chipsRow}>
-              {typeOptions.map(option => {
-                const active = filters.type === option.value;
-
-                return (
-                  <Pressable
-                    key={option.value}
-                    onPress={() => setType(option.value)}
-                    style={[styles.chip, active && styles.chipActive]}
-                  >
-                    <Text
-                      variant="labelLarge"
-                      style={[styles.chipText, active && styles.chipTextActive]}
-                    >
-                      {option.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            <Text variant="titleMedium" style={styles.sectionTitle}>
-              Genres
-            </Text>
-
-            <View style={styles.chipsRow}>
-              {searchGenresMock.map(genre => {
-                const active = filters.genres.includes(genre);
-
-                return (
-                  <Pressable
-                    key={genre}
-                    onPress={() => toggleGenre(genre)}
-                    style={[styles.chip, active && styles.chipActive]}
-                  >
-                    <Text
-                      variant="labelLarge"
-                      style={[styles.chipText, active && styles.chipTextActive]}
-                    >
-                      {genre}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            <Text variant="titleMedium" style={styles.sectionTitle}>
-              Minimum Rating
-            </Text>
-
-            <View style={styles.chipsRow}>
-              {searchRatingOptions.map(option => {
-                const active = filters.minimumRating === option;
-
-                return (
-                  <Pressable
-                    key={option}
-                    onPress={() => setMinimumRating(option)}
-                    style={[styles.chip, active && styles.chipActive]}
-                  >
-                    <Text
-                      variant="labelLarge"
-                      style={[styles.chipText, active && styles.chipTextActive]}
-                    >
-                      {option === 0 ? 'Any' : `${option}+`}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            <Pressable onPress={resetFilters} style={styles.clearButton}>
-              <Text variant="labelLarge" style={styles.clearButtonText}>
-                Clear filters
-              </Text>
-            </Pressable>
-          </View>
+          <SearchFiltersPanel 
+            filters={filters} 
+            onSetType={setType} 
+            onToggleGenre={toggleGenre} 
+            onSetMinimumRating={setMinimumRating} 
+            onReset={resetFilters} 
+          /> 
         ) : null}
 
         <Text variant="titleMedium" style={styles.resultsTitle}>
@@ -226,48 +135,10 @@ export function SearchScreen() {
         </Text>
 
         {filteredResults.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <SearchX size={36} color={colors.textPrimary} strokeWidth={1.8} />
-
-            <Text variant="titleLarge" style={styles.emptyTitle}>
-              No results found
-            </Text>
-
-            <Text variant="bodyLarge" style={styles.emptyDescription}>
-              Try a different title or reset your active filters
-            </Text>
-          </View>
+          <SearchEmptyState />
         ) : (
           filteredResults.map(item => (
-            <Pressable key={item.id} style={styles.resultCard}>
-              <Image source={{ uri: item.posterUrl }} style={styles.poster} />
-
-              <View style={styles.resultContent}>
-                <View>
-                  <Text
-                    variant="titleMedium"
-                    numberOfLines={2}
-                    style={styles.resultTitle}
-                  >
-                    {item.title}
-                  </Text>
-
-                  <RatingRow
-                    year={item.year}
-                    label={item.type === 'movie' ? 'Movie' : 'TV Show'}
-                    rating={item.rating}
-                  />
-                </View>
-
-                <Text
-                  variant="bodyMedium"
-                  numberOfLines={2}
-                  style={styles.genresText}
-                >
-                  {item.genres.join(' • ')}
-                </Text>
-              </View>
-            </Pressable>
+            <SearchResultCard key={item.id} item={item} onPress={handlePressResult}/>
           ))
         )}
       </ScrollView>
