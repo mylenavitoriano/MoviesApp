@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { HomeScreen } from '@/screens/home/HomeScreen';
-// import { ProfileScreen } from '../screens/profile/ProfileScreen';
+import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { FavoritesScreen } from '../screens/favorites/FavoritesScreen';
 import { SearchScreen } from '../screens/search/SearchScreen';
 import { DetailsScreen } from '@/screens/details/DetailsScreen';
@@ -29,7 +29,7 @@ function TabNavigator() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Favorites" component={FavoritesScreen} />
-        <Tab.Screen name="Profile" component={DetailsScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
   )
 }

@@ -91,13 +91,6 @@ export function SearchScreen() {
           paddingBottom: tabBarHeight + 24,
         }}
       >
-        <Text variant="headlineMedium" style={styles.title}>
-          Search
-        </Text>
-        <Text variant="bodyLarge" style={styles.subtitle}>
-          Find movies and series with local mock filters.
-        </Text>
-
         <SearchInput 
           value={query} 
           onChangeText={setQuery}

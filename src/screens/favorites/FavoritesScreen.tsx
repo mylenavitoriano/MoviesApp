@@ -1,29 +1,74 @@
-import { Text } from "react-native-paper";
 import { Screen } from "../../components/common/Screen";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { colors } from "../../theme/colors";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackNavigationProp } from "../../routes/types";
+import { MediaListItem } from "../../types/media";
+import { useState } from "react";
+import { favoriteItems } from "../../mocks/favorites";
+import { FavoriteCard } from "../../components/favorites/FavoriteCard";
+import { Text } from "react-native-paper";
+import { spacing } from "../../theme/spacing";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { FavoritesEmptyState } from "../../components/favorites/FavoritesEmptyState";
 
 export function FavoritesScreen() {
+    const [favorites, setFavorites] = useState<MediaListItem[]>(favoriteItems);
+
+    const navigation = useNavigation<RootStackNavigationProp>();
+    const tabBarHeight = useBottomTabBarHeight();
+
+    function handlePress(item: MediaListItem) {
+        navigation.navigate('Details', { id: item.id });
+    }
+
+    function handleRemove(item: MediaListItem) {
+        setFavorites((current) => current.filter(fav => fav.id !== item.id));
+    }
+
+    function handleExplore() {
+        navigation.navigate('Tabs', { screen: 'Search' });
+      }
+
     return (
-        <Screen style={styles.container}>
-            <Text variant="headlineMedium" style={styles.title}>
-                Favorites
-            </Text>
-            <Text variant="bodyLarge" style={styles.subtitle}>
-                Favorites screen placeholder
-            </Text>
+        <Screen style={styles.screen}>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                paddingBottom: tabBarHeight + 24,
+                }}
+            >
+                <Text variant="headlineMedium" style={styles.title}>
+                    Favorites
+                </Text>
+                <Text variant="bodyLarge" style={styles.subtitle}>
+                    {favorites.length > 0
+                    ? `${favorites.length} saved item${favorites.length > 1 ? 's' : ''}`
+                    : 'Your saved content will appear here.'}
+                </Text>
+
+                {favorites.length === 0 ? (
+                    <FavoritesEmptyState onExplore={handleExplore}/>
+                ) : (
+                    favorites.map(item => (
+                        <FavoriteCard key={item.id} item={item} onPress={handlePress} onRemove={handleRemove}/>
+                    ))
+                )}
+            </ScrollView>
         </Screen>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
+    screen: {
         justifyContent: 'center',
     },
     title: {
         color: colors.textPrimary,
+        marginBottom: spacing.xs,
     },
     subtitle: {
         color: colors.textSecondary,
+        marginBottom: spacing.xl,
     },
 })

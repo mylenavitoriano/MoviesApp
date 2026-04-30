@@ -1,8 +1,8 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RouteProp } from '@react-navigation/native';
+import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 
 export type RootStackParamList = {
-    Tabs: undefined;
+    Tabs: NavigatorScreenParams<RootTabParamList>;
     Details: { id: string };
 }
 

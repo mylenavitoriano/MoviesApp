@@ -4,50 +4,51 @@ import { spacing } from '../../theme/spacing';
 import { radius } from '../../theme/radius';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { RatingRow } from '../common/RatingRow';
-import { SearchResultItem } from '../../types/search';
+import { MediaListItem } from '../../types/media';
+import { AppIconButton } from '../common/AppIconButton';
+import { Trash2 } from 'lucide-react-native';
 
 type Props = {
-    item: SearchResultItem;
-  onPress: (item: SearchResultItem) => void;
+    item: MediaListItem;
+    onPress: (item: MediaListItem) => void;
+    onRemove: (item: MediaListItem) => void;
 };
 
-export function SearchResultCard({ item, onPress }: Props) {
+export function FavoriteCard({ item, onPress, onRemove }: Props) {
   return (
-    <Pressable style={styles.resultCard} onPress={() => onPress(item)}>
+    <Pressable style={styles.card} onPress={() => onPress(item)}>
         <Image source={{ uri: item.posterUrl }} style={styles.poster} />
 
-        <View style={styles.resultContent}>
+        <View style={styles.content}>
             <View>
                 <Text
-                variant="titleMedium"
-                numberOfLines={2}
-                style={styles.resultTitle}
+                    variant="titleMedium"
+                    numberOfLines={2}
+                    style={styles.title}
                 >
-                {item.title}
+                    {item.title}
                 </Text>
 
                 <RatingRow
-                year={item.year}
-                label={item.type === 'movie' ? 'Movie' : 'TV Show'}
-                rating={item.rating}
+                    year={item.year}
+                    label={item.type === 'movie' ? 'Movie' : 'TV Show'}
+                    rating={item.rating}
                 />
             </View>
-
-            <Text
-                variant="bodyMedium"
-                numberOfLines={2}
-                style={styles.genresText}
-            >
-                {item.genres.join(' • ')}
-            </Text>
         </View>
+
+        <AppIconButton 
+            icon={Trash2}
+            onPress={() => onRemove(item)}
+        />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-    resultCard: {
+    card: {
         flexDirection: 'row',
+        alignItems: 'center',
         padding: spacing.md,
         borderRadius: radius['2xl'],
         backgroundColor: colors.surface,
@@ -61,18 +62,13 @@ const styles = StyleSheet.create({
         borderRadius: radius.lg,
         backgroundColor: colors.surfaceSoft,
       },
-      resultContent: {
+      content: {
         flex: 1,
         marginLeft: spacing.md,
-        justifyContent: 'space-between',
+        justifyContent: 'center',
       },
-      resultTitle: {
+      title: {
         color: colors.textPrimary,
         marginBottom: spacing.sm,
-      },
-      genresText: {
-        color: colors.textSecondary,
-        lineHeight: 22,
-        marginTop: spacing.md,
       },
 });

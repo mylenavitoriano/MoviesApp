@@ -69,9 +69,7 @@ export function DetailsScreen() {
     <Screen style={styles.screen}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: 48,
-        }}
+        contentContainerStyle={{paddingBottom: 48}}
       >
         <DetailHero item={item} />
 
