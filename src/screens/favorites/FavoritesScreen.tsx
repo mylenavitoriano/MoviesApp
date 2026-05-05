@@ -4,16 +4,15 @@ import { colors } from "../../theme/colors";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackNavigationProp } from "../../routes/types";
 import { MediaListItem } from "../../types/media";
-import { useState } from "react";
-import { favoriteItems } from "../../mocks/favorites";
 import { FavoriteCard } from "../../components/favorites/FavoriteCard";
 import { Text } from "react-native-paper";
 import { spacing } from "../../theme/spacing";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { FavoritesEmptyState } from "../../components/favorites/FavoritesEmptyState";
+import { useFavorites } from "../../hooks/useFavorites";
 
 export function FavoritesScreen() {
-    const [favorites, setFavorites] = useState<MediaListItem[]>(favoriteItems);
+    const { favorites, removeFavorite } = useFavorites();
 
     const navigation = useNavigation<RootStackNavigationProp>();
     const tabBarHeight = useBottomTabBarHeight();
@@ -23,7 +22,7 @@ export function FavoritesScreen() {
     }
 
     function handleRemove(item: MediaListItem) {
-        setFavorites((current) => current.filter(fav => fav.id !== item.id));
+        removeFavorite(item.id)
     }
 
     function handleExplore() {
