@@ -1,6 +1,6 @@
-import React, { createContext, Dispatch, useContext, useReducer } from "react";
+import React, { createContext, Dispatch, useContext, useEffect, useReducer, useState } from "react";
 import { FavoritesAction, favoritesReducer, FavoritesState } from "./favoritesReducer"
-import { favoriteItems } from "../../mocks/favorites";
+import { loadFavorites, saveFavorites } from "../../utils/storage";
 
 type FavoritesContextValue = {
     state: FavoritesState;
@@ -14,9 +14,32 @@ type Props = {
 }
 
 export function FavoritesProvider({ children }: Props) {
-    const [state, dispatch] = useReducer(favoritesReducer, {
-        items: favoriteItems,
-    });
+    const [state, dispatch] = useReducer(favoritesReducer, { items: [] });
+    const [isReady, setIsReady] = useState(false);
+
+    // Carrega favoritos salvos ao montar
+    useEffect(() => {
+        loadFavorites().then(savedItems => {
+            if(savedItems.length > 0){
+                savedItems.forEach(item => 
+                    dispatch({ type: "ADD_FAVORITE", payload: item }),
+                );
+            }
+            setIsReady(true)
+        });
+    }, []);
+
+    // Salva sempre que a lista mudar
+    useEffect(() => {
+        if (!isReady) {
+            return;
+        }
+        saveFavorites(state.items);
+    }, [state.items, isReady])
+
+    if (!isReady) {
+        return null;
+    }
 
     return (
         <FavoritesContext.Provider value={{ state, dispatch }}>
