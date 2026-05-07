@@ -13,14 +13,19 @@ import { getMediaDetails } from '../../services/details/detailsService';
 import { ScreenLoader } from '../../components/common/ScreenLoader';
 import { StateFeedback } from '../../components/common/StateFeedback';
 import { CloudOff } from 'lucide-react-native';
-import { useRoute } from '@react-navigation/native';
-import { DetailsRoutProp } from '../../routes/types';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { DetailsRoutProp, RootStackNavigationProp } from '../../routes/types';
+import { useFavorites } from '../../hooks/useFavorites';
 
 type DetailsScreenStatus = 'loading' | 'success' | 'error';
 
 export function DetailsScreen() {
+
   const route = useRoute<DetailsRoutProp>();
+  const navigation = useNavigation<RootStackNavigationProp>();
   const { id } = route.params;
+
+  const { isFavorite, removeFavorite, addFavorite } = useFavorites();
 
   const [item, setItem] = useState<MediaDetails | null>(null);
   const [status, setStatus] = useState<DetailsScreenStatus>('loading');
@@ -65,13 +70,32 @@ export function DetailsScreen() {
     );
   }
 
+  function handleToggleFavorite () {
+    if(!item) {
+      return
+    }
+
+    if(isFavorite(item.id)) {
+      removeFavorite(item.id)
+    } else {
+      addFavorite({
+        id: item.id,
+        title: item.title,
+        year: item.year,
+        rating: item.rating,
+        type: item.type,
+        posterUrl: item.imageUrl
+      });
+    }
+  }
+
   return (
     <Screen style={styles.screen}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 48}}
       >
-        <DetailHero item={item} />
+        <DetailHero item={item} onBack={navigation.goBack} isFavorite={isFavorite(item.id)} onToggleFavorite={handleToggleFavorite}/>
 
         <GenrePills items={item.genres} />
 

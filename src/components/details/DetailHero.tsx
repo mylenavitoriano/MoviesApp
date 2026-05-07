@@ -5,27 +5,39 @@ import { RatingRow } from '../common/RatingRow';
 import { spacing } from '../../theme/spacing';
 import { radius } from '../../theme/radius';
 import { colors } from '../../theme/colors';
+import { ArrowLeft, Heart } from 'lucide-react-native';
+import { AppIconButton } from '../common/AppIconButton';
 
 type Props = {
   item: MediaDetails;
-  //   onBack?: () => void;
+  onBack?: () => void;
+  onToggleFavorite?: () => void;
+  isFavorite: boolean
 };
 
-export function DetailHero({ item }: Props) {
+export function DetailHero({ item, onBack, onToggleFavorite, isFavorite }: Props) {
   return (
     <View style={styles.container}>
-      {/* <AppIconButton
-        icon={ArrowLeft}
-        onPress={onBack}
-        style={styles.backButton}
-      /> */}
-
       <ImageBackground
         source={{ uri: item.imageUrl }}
         style={styles.image}
         imageStyle={styles.imageBorder}
       >
         <View style={styles.overlay} />
+
+        <AppIconButton
+        icon={ArrowLeft}
+        onPress={onBack}
+        style={styles.backButton}
+      />
+
+      <AppIconButton
+        icon={Heart}
+        onPress={onToggleFavorite}
+        style={styles.favoriteButton}
+        fill={isFavorite ? colors.textPrimary : "transparent"}
+      />
+
       </ImageBackground>
 
       <View style={styles.content}>
@@ -51,6 +63,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+    zIndex: 2,
+    backgroundColor: 'rgba(14, 21, 24, 0.82)',
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
     zIndex: 2,
     backgroundColor: 'rgba(14, 21, 24, 0.82)',
   },

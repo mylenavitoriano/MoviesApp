@@ -8,6 +8,7 @@ type Props = {
     onPress?: () => void;
     size?: number;
     style?: ViewStyle;
+    fill?: string
 };
 
 export function AppIconButton({
@@ -15,10 +16,11 @@ export function AppIconButton({
     onPress,
     size = 22,
     style,
+    fill
 }: Props) {
     return (
         <Pressable onPress={onPress} style={[styles.container, style]}>
-            <Icon size={size} color={colors.textPrimary} strokeWidth={2} />
+            <Icon size={size} color={colors.textPrimary} strokeWidth={2} fill={fill}/>
         </Pressable>
     )
 }
