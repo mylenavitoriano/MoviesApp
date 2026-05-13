@@ -18,7 +18,6 @@ function wait(ms: number): Promise<void> {
 export async function getHomeScreenData(): Promise<HomeScreenData> {
   if (HOME_SERVICE_MODE === 'real') {
     const data = await getTmdbHomeScreenData();
-    console.log('HOME DATA:', JSON.stringify(data, null, 2));
     return data;
   }
 

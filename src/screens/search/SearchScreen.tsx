@@ -64,7 +64,7 @@ export function SearchScreen() {
   }  
 
   function handlePressResult(item: SearchResultItem) {
-    navigation.navigate('Details', { id: item.id });
+    navigation.navigate('Details', { id: item.id, type: item.type });
   }
 
   const filtersSummary = [

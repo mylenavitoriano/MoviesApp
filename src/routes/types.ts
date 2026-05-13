@@ -3,7 +3,7 @@ import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 
 export type RootStackParamList = {
     Tabs: NavigatorScreenParams<RootTabParamList>;
-    Details: { id: string };
+    Details: { id: string, type: "movie" | "tv" };
 }
 
 export type RootTabParamList = {

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { Screen } from '../../components/common/Screen';
-import { HomeSearchBar } from './components/HomeSearchBar';
 import { CategoryChips } from './components/CategoryChips';
 import { FeaturedBanner } from './components/FeaturedBanner';
 import { MediaSection } from './components/MediaSection';
@@ -14,7 +13,6 @@ import { useHomeData } from '../../hooks/useHomeData';
 
 
 export function HomeScreen() {
-  const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -43,7 +41,7 @@ export function HomeScreen() {
   }
 
   const hasItems = data?.sections.some(section => section.items.length > 0);
-  const isEmpty = !data?.featuredItem && !hasItems;
+  const isEmpty = !data?.featuredItem && data?.featuredItem != null && !hasItems;
 
   if (isEmpty || !data) {
     return (
@@ -67,7 +65,6 @@ export function HomeScreen() {
           paddingBottom: tabBarHeight + 24,
         }}
       >
-        <HomeSearchBar value={search} onChangeText={setSearch} />
 
         <CategoryChips
           items={data.categories}

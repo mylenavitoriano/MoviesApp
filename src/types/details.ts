@@ -19,6 +19,7 @@ export type MediaDetails = {
   rating: number;
   type: MediaType;
   imageUrl: string;
+  backdropUrl: string;
   genres: string[];
   overview: string;
   keyInfo: DetailKeyInfoItem[];

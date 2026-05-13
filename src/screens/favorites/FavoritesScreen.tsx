@@ -18,7 +18,7 @@ export function FavoritesScreen() {
     const tabBarHeight = useBottomTabBarHeight();
 
     function handlePress(item: MediaListItem) {
-        navigation.navigate('Details', { id: item.id });
+        navigation.navigate('Details', { id: item.id, type: item.type });
     }
 
     function handleRemove(item: MediaListItem) {

@@ -7,6 +7,7 @@ type TmdbMediaItem = {
     title?: string;
     name?: string;
     poster_path: string | null;
+    backdrop_path: string | null;
     vote_average: number;
     release_date?: string;
     first_air_date?: string;
@@ -26,6 +27,7 @@ function toMediaListResponse (
     const dateStr = item.release_date ?? item.first_air_date ?? "";
     const year = dateStr ? new Date(dateStr).getFullYear() : 0;
     const posterUrl = item.poster_path ? `${TMDB_IMAGE_BASE_URL}${item.poster_path}` : 'https://placehold.co/300x450/222c35/f9f8ff?text=No+Image';
+    const backdropUrl = item.backdrop_path ? `${TMDB_IMAGE_BASE_URL}${item.backdrop_path}` : 'https://placehold.co/300x450/222c35/f9f8ff?text=No+Image';
 
     return {
         id: String(item.id),
@@ -33,7 +35,8 @@ function toMediaListResponse (
         year,
         rating: Number(item.vote_average.toFixed(1)),
         type,
-        posterUrl
+        posterUrl,
+        backdropUrl
     }
 }
 
@@ -51,6 +54,9 @@ export async function getTmdbHomeScreenData(): Promise<HomeScreenData> {
             imageUrl: featuredRaw.poster_path
                 ? `${TMDB_IMAGE_BASE_URL}${featuredRaw.poster_path}`
                 : 'https://placehold.co/1200x600/1c252d/f9f8ff?text=Featured',
+            backdropUrl: featuredRaw.backdrop_path
+            ? `${TMDB_IMAGE_BASE_URL}${featuredRaw.backdrop_path}`
+            : 'https://placehold.co/1200x600/1c252d/f9f8ff?text=Featured',
         }
         : null;
 

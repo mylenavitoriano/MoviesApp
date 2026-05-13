@@ -12,6 +12,7 @@ export type MediaListItem = {
   rating: number;
   type: MediaType;
   posterUrl: string;
+  backdropUrl?: string;
 };
 
 export type MediaSummary = {
@@ -29,6 +30,7 @@ export type FeaturedMediaItem = {
   id: string;
   title: string;
   imageUrl: string;
+  backdropUrl?: string
 };
 
 /** Representa cada bloco da Home (New e Movies) */

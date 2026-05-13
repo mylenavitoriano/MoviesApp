@@ -7,68 +7,22 @@ import { Text } from 'react-native-paper';
 import { spacing } from '../../theme/spacing';
 import { KeyInfoList } from '../../components/details/KeyInfoList';
 import { CastList } from '../../components/details/CastList';
-import { useCallback, useEffect, useState } from 'react';
-import { MediaDetails } from '../../types/details';
-import { getMediaDetails } from '../../services/details/detailsService';
 import { ScreenLoader } from '../../components/common/ScreenLoader';
 import { StateFeedback } from '../../components/common/StateFeedback';
 import { CloudOff } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { DetailsRoutProp, RootStackNavigationProp } from '../../routes/types';
 import { useFavorites } from '../../hooks/useFavorites';
-
-type DetailsScreenStatus = 'loading' | 'success' | 'error';
+import { useMediaDetails } from '../../hooks/useMediaDetails';
 
 export function DetailsScreen() {
 
   const route = useRoute<DetailsRoutProp>();
   const navigation = useNavigation<RootStackNavigationProp>();
-  const { id } = route.params;
+  const { id, type } = route.params;
 
   const { isFavorite, removeFavorite, addFavorite } = useFavorites();
-
-  const [item, setItem] = useState<MediaDetails | null>(null);
-  const [status, setStatus] = useState<DetailsScreenStatus>('loading');
-
-  const loadDetails = useCallback(async () => {
-    try {
-      setStatus('loading');
-
-      const data = await getMediaDetails(id);
-
-      setItem(data);
-      setStatus('success');
-    } catch (error) {
-      setStatus('error');
-      console.log(error);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    loadDetails();
-  }, [loadDetails]);
-
-  if (status === 'loading') {
-    return (
-      <Screen style={styles.screen}>
-        <ScreenLoader label="Loading details..." />
-      </Screen>
-    );
-  }
-
-  if (status === 'error' || !item) {
-    return (
-      <Screen style={styles.screen}>
-        <StateFeedback
-          icon={CloudOff}
-          title={'Could not load the home'}
-          description="The selected media could not be loaded right now. Please try again."
-          actionLabel="Try again"
-          onAction={loadDetails}
-        />
-      </Screen>
-    );
-  }
+  const { data: item, isLoading, isError, refetch } = useMediaDetails(id, type);
 
   function handleToggleFavorite () {
     if(!item) {
@@ -84,10 +38,35 @@ export function DetailsScreen() {
         year: item.year,
         rating: item.rating,
         type: item.type,
-        posterUrl: item.imageUrl
+        posterUrl: item.imageUrl,
+        backdropUrl: item.backdropUrl
       });
     }
   }
+
+  if (isLoading) {
+    return (
+      <Screen style={styles.screen}>
+        <ScreenLoader label="Loading details..." />
+      </Screen>
+    );
+  }
+
+  if (isError || !item) {
+    return (
+      <Screen style={styles.screen}>
+        <StateFeedback
+          icon={CloudOff}
+          title={'Could not load the home'}
+          description="The selected media could not be loaded right now. Please try again."
+          actionLabel="Try again"
+          onAction={refetch}
+        />
+      </Screen>
+    );
+  }
+
+  
 
   return (
     <Screen style={styles.screen}>

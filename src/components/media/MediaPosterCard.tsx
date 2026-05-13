@@ -5,14 +5,22 @@ import { colors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
 import { radius } from '../../theme/radius';
 import { RatingRow } from '../common/RatingRow';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigationProp } from '../../routes/types';
 
 type Props = {
   item: MediaListItem;
 };
 
 export function MediaPosterCard({ item }: Props) {
+  const navigation = useNavigation<RootStackNavigationProp>();
+
+  function handlePress() {
+    navigation.navigate('Details', { id: item.id, type: item.type });
+  }
+  
   return (
-    <Pressable style={styles.container}>
+    <Pressable style={styles.container} onPress={handlePress}>
       <Image source={{ uri: item.posterUrl }} style={styles.poster} />
 
       <Text variant="titleMedium" numberOfLines={2} style={styles.title}>

@@ -19,7 +19,7 @@ export function DetailHero({ item, onBack, onToggleFavorite, isFavorite }: Props
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={{ uri: item.imageUrl }}
+        source={{ uri: item.backdropUrl }}
         style={styles.image}
         imageStyle={styles.imageBorder}
       >

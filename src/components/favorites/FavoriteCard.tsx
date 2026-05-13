@@ -39,6 +39,7 @@ export function FavoriteCard({ item, onPress, onRemove }: Props) {
 
         <AppIconButton 
             icon={Trash2}
+            fill='transparent'
             onPress={() => onRemove(item)}
         />
     </Pressable>

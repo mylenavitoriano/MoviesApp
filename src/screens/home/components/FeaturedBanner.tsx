@@ -1,20 +1,22 @@
 import { ImageBackground, StyleSheet, View } from "react-native"
 import { Text } from "react-native-paper"
 
-import { FeaturedItem } from "../../../types/media"
-import { spacing } from "../../../theme/spacing"
-import { radius } from "../../../theme/radius"
-import { colors } from "../../../theme/colors"
+import { FeaturedMediaItem } from "../../../types/media";
+import { spacing } from "../../../theme/spacing";
+import { radius } from "../../../theme/radius";
+import { colors } from "../../../theme/colors";
 
 type Props = {
-    item: FeaturedItem
+    item: FeaturedMediaItem | null;
 }
 
 export function FeaturedBanner({ item }: Props) {
+    if (!item) return null;
+
     return (
         <View style={styles.wrapper}>
             <ImageBackground
-                source={{ uri: item.imageUrl }}
+                source={{ uri: item.backdropUrl }}
                 imageStyle={styles.image}
                 style={styles.banner}
             >
