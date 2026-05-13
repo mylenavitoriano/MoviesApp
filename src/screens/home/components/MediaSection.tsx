@@ -1,13 +1,12 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import { MediaCardItem } from "../../../types/media";
+import { MediaListItem } from "../../../types/media";
 import { MediaPosterCard } from "../../../components/media/MediaPosterCard";
 import { spacing } from "../../../theme/spacing";
-import { colors } from "../../../theme/colors";
 import { SectionHeader } from "../../../components/common/SectionHeader";
 
 type Props = {
     title: string;
-    items: MediaCardItem[];
+    items: MediaListItem[];
 }
 
 export function MediaSection({ title, items }: Props) {
@@ -31,19 +30,8 @@ const styles = StyleSheet.create({
     container: {
         marginBottom: spacing['2xl']
     },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: spacing.lg
-    },
-    title: {
-        color: colors.textPrimary
-    },
-    link: {
-        color: colors.textSecondary
-    },
     listContent: {
-        paddingRight: spacing.lg
+        paddingRight: spacing.lg,
+        marginTop: spacing.sm
     }
 })

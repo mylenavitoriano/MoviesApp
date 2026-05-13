@@ -5,16 +5,23 @@ import {
   movieItems,
   newItems,
 } from '../../mocks/home';
+import { getTmdbHomeScreenData } from './tmdbHomeService';
 
-type HomeServiceMode = 'success' | 'empty' | 'error';
+type HomeServiceMode = 'success' | 'empty' | 'error' | "real";
 
-const HOME_SERVICE_MODE: HomeServiceMode = 'success';
+const HOME_SERVICE_MODE: HomeServiceMode = 'real';
 
 function wait(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export async function getHomeScreenData(): Promise<HomeScreenData> {
+  if (HOME_SERVICE_MODE === 'real') {
+    const data = await getTmdbHomeScreenData();
+    console.log('HOME DATA:', JSON.stringify(data, null, 2));
+    return data;
+  }
+
   await wait(700);
 
   if (HOME_SERVICE_MODE === 'error') {

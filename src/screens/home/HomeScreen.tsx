@@ -1,15 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { Screen } from '../../components/common/Screen';
 import { HomeSearchBar } from './components/HomeSearchBar';
 import { CategoryChips } from './components/CategoryChips';
-import {
-  categories,
-  featuredItems,
-  movieItems,
-  newItems,
-} from '../../mocks/home';
 import { FeaturedBanner } from './components/FeaturedBanner';
 import { MediaSection } from './components/MediaSection';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -26,9 +20,6 @@ export function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [homeData, setHomeData] = useState<HomeScreenData | null>(null);
   const [status, setStatus] = useState<HomeScreenStatus>('loading');
-
-  const filteredNewItems = useMemo(() => newItems, []);
-  const filteredMovieItems = useMemo(() => movieItems, []);
 
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -99,15 +90,16 @@ export function HomeScreen() {
         <HomeSearchBar value={search} onChangeText={setSearch} />
 
         <CategoryChips
-          items={categories}
+          items={homeData.categories}
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
 
-        <FeaturedBanner item={featuredItems[0]} />
+        <FeaturedBanner item={homeData.featuredItem} />
 
-        <MediaSection title="New" items={filteredNewItems} />
-        <MediaSection title="Movies" items={filteredMovieItems} />
+        {homeData.sections.map(section => (
+          <MediaSection key={section.id} title={section.title} items={section.items} />
+        ))}
       </ScrollView>
     </Screen>
   );
