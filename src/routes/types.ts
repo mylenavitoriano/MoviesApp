@@ -4,6 +4,7 @@ import { NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 export type RootStackParamList = {
     Tabs: NavigatorScreenParams<RootTabParamList>;
     Details: { id: string, type: "movie" | "tv" };
+    EditProfile: undefined;
 }
 
 export type RootTabParamList = {

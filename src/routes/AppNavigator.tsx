@@ -11,6 +11,7 @@ import { colors } from '../theme/colors';
 import { CustomTabBar } from './CustomTabBar';
 import { RootStackParamList, RootTabParamList } from './types';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { EditProfileScreen } from '../screens/profile/EditProfileScreen';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,6 +41,7 @@ export function AppNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs" component={TabNavigator} />
         <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

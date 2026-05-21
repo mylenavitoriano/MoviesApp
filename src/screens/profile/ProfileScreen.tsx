@@ -10,8 +10,12 @@ import { ProfileMenuRow } from "../../components/profile/ProfileMenuRow";
 import { Bell, Globe, LogOut, Moon, Pencil, Shield } from "lucide-react-native";
 import { spacing } from "../../theme/spacing";
 import { radius } from "../../theme/radius";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackNavigationProp } from "../../routes/types";
 
 export function ProfileScreen() {
+    const navigation = useNavigation<RootStackNavigationProp>();
+
     const tabBarHeight = useBottomTabBarHeight();
 
     return (
@@ -70,7 +74,7 @@ export function ProfileScreen() {
                     <ProfileMenuRow 
                         icon={Pencil}
                         label="Edit profile"
-                        onPress={() => console.log("Edit profile")}
+                        onPress={() => navigation.navigate('EditProfile')}
                     />
                     <ProfileMenuRow 
                         icon={Shield}
