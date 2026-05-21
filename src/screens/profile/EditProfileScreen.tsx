@@ -10,16 +10,26 @@ import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { spacing } from "../../theme/spacing";
 import { radius } from "../../theme/radius";
 import { profileMock } from "../../mocks/profile";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type EditProfileFormData = {
-    name: string;
-    email: string;
-};
+const editProfileSchema = z.object({
+    name: z
+        .string()
+        .min(2, "Name must be at least 2 characters")
+        .max(60, "Name must be at most 60 characters"),
+    email: z
+        .string()
+        .email("Entr a valid email address"),
+});
+
+type EditProfileFormData = z.infer<typeof editProfileSchema>;
 
 export function EditProfileScreen() {
     const navigation = useNavigation<RootStackNavigationProp>();
 
     const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<EditProfileFormData>({
+        resolver: zodResolver(editProfileSchema),
         defaultValues: {
             name: profileMock.name,
             email: profileMock.email,
@@ -58,10 +68,6 @@ export function EditProfileScreen() {
                         <Controller 
                             control={control}
                             name="name"
-                            rules={{
-                                required: "Name is required",
-                                minLength: { value: 2, message: "Name must be at least 2 characters" },
-                            }}
                             render={({ field: { value, onChange, onBlur } }) => (
                                 <TextInput 
                                     mode="outlined"
@@ -88,13 +94,6 @@ export function EditProfileScreen() {
                         <Controller 
                             control={control}
                             name="email"
-                            rules={{
-                                required: "Email is required",
-                                pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: 'Enter a valid email address'
-                                }
-                            }}
                             render={({ field: { value, onChange, onBlur } }) => (
                                 <TextInput 
                                     mode="outlined"
